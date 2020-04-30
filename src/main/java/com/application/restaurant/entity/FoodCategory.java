@@ -2,6 +2,7 @@ package com.application.restaurant.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -42,5 +43,13 @@ public class FoodCategory {
 
     public void setFoodList(Set<Food> foodList) {
         this.foodList = foodList;
+    }
+
+    public void addFood(Food food) {
+        if(this.foodList == null) {
+            this.foodList = new HashSet<>();
+        }
+
+        this.foodList.add(food);
     }
 }

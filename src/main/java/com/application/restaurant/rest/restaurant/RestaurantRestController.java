@@ -2,6 +2,7 @@ package com.application.restaurant.rest.restaurant;
 
 import com.application.restaurant.entity.Photo;
 import com.application.restaurant.entity.Restaurant;
+import com.application.restaurant.rest.exceptions.NotFoundException;
 import com.application.restaurant.service.photosServices.PhotoService;
 import com.application.restaurant.service.restaurantServices.RestaurantService;
 import com.application.restaurant.service.userServices.UserService;
@@ -16,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @RestController
@@ -76,6 +78,28 @@ public class RestaurantRestController {
         Files.write(path, imageBytes);
         photoService.savePhoto(photo);
         return photo;
+    }
+
+    @GetMapping("/restaurants/{id}/photo")
+    public Set<Photo> getPhotosByRestaurantId(@PathVariable long id) {
+
+        Restaurant restaurant = restaurantService.getRestaurant(id);
+
+        return restaurant.getPhotoList();
+    }
+
+    @GetMapping("/restaurants/{id}/photo/{photoId}")
+    public Photo getPhotoByIdFromRestaurant(@PathVariable("id") long id, @PathVariable("photoId") long photoId) {
+
+        Restaurant restaurant = restaurantService.getRestaurant(id);
+
+        for(Photo photo : restaurant.getPhotoList()) {
+            if(photo.getId() == photoId) {
+                return photo;
+            }
+        }
+
+        throw new NotFoundException("Photo with the id " + photoId + " cannot be found");
     }
 
     @PutMapping("/restaurants")

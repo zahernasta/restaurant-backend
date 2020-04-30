@@ -2,14 +2,13 @@ package com.application.restaurant.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name="restaurants")
@@ -77,7 +76,20 @@ public class Restaurant {
             inverseJoinColumns=@JoinColumn(name="photo_id")
     )
     @JsonIgnore
-    private List<Photo> photoList;
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<Photo> photoList;
+
+    @ManyToMany(
+            fetch = FetchType.EAGER
+    )
+    @JoinTable(
+            name = "menu",
+            joinColumns = @JoinColumn(name = "food_id"),
+            inverseJoinColumns = @JoinColumn(name = "restaurant_id")
+    )
+    @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<Food> foodList;
 
     public Restaurant() { }
 
@@ -165,21 +177,37 @@ public class Restaurant {
         return description;
     }
 
-    public List<Photo> getPhotoList() {
+    public Set<Photo> getPhotoList() {
         return photoList;
     }
 
     public void addPhoto(Photo photo) {
 
         if(this.photoList == null) {
-            photoList = new ArrayList<>();
+            photoList = new HashSet<>();
         }
 
         photoList.add(photo);
     }
 
-    public void setPhotoList(List<Photo> photoList) {
+    public void setPhotoList(Set<Photo> photoList) {
         this.photoList = photoList;
+    }
+
+    public Set<Food> getFoodList() {
+        return foodList;
+    }
+
+    public void setFoodList(Set<Food> foodList) {
+        this.foodList = foodList;
+    }
+
+    public void addFood(Food food) {
+        if(this.foodList == null) {
+            this.foodList = new HashSet<>();
+        }
+
+        this.foodList.add(food);
     }
 
     public void setDescription(String description) {

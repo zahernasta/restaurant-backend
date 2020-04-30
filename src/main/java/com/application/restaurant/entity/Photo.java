@@ -2,11 +2,15 @@ package com.application.restaurant.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="photos")
@@ -31,8 +35,6 @@ public class Photo {
 
     @ManyToMany(
             fetch=FetchType.EAGER
-//            ,
-//             mappedBy = "photoList"
     )
     @JoinTable(
             name= "restaurants_photos",
@@ -40,7 +42,8 @@ public class Photo {
             inverseJoinColumns=@JoinColumn(name="restaurant_id")
     )
     @JsonIgnore
-    private List<Restaurant> restaurantList;
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<Restaurant> restaurantList;
 
     public Photo() {
     }
@@ -61,18 +64,18 @@ public class Photo {
         this.photoLocation = photoLocation;
     }
 
-    public List<Restaurant> getRestaurantList() {
+    public Set<Restaurant> getRestaurantList() {
         return restaurantList;
     }
 
-    public void setRestaurantList(List<Restaurant> restaurantList) {
+    public void setRestaurantList(Set<Restaurant> restaurantList) {
         this.restaurantList = restaurantList;
     }
 
     public void addRestaurant(Restaurant restaurant) {
 
         if(this.restaurantList == null) {
-            restaurantList = new ArrayList<>();
+            restaurantList = new HashSet<>();
         }
 
         restaurantList.add(restaurant);

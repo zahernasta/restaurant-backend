@@ -6,6 +6,10 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "foods")
@@ -38,6 +42,18 @@ public class Food {
     @JsonIgnore
     @NotNull
     private FoodCategory foodCategory;
+
+    @ManyToMany(
+            fetch = FetchType.EAGER
+    )
+    @JoinTable(
+            name="menu",
+            joinColumns = @JoinColumn(name="restaurant_id"),
+            inverseJoinColumns = @JoinColumn(name="food_id")
+
+    )
+    @JsonIgnore
+    private Set<Restaurant> restaurantList;
 
     public int getId() {
         return id;
@@ -81,6 +97,23 @@ public class Food {
 
     public FoodCategory getFoodCategory() {
         return foodCategory;
+    }
+
+    public Set<Restaurant> getRestaurantList() {
+        return restaurantList;
+    }
+
+    public void setRestaurantList(Set<Restaurant> restaurantList) {
+        this.restaurantList = restaurantList;
+    }
+
+    public void addRestaurant(Restaurant restaurant) {
+
+        if(this.restaurantList == null) {
+            this.restaurantList = new HashSet<>();
+        }
+
+        restaurantList.add(restaurant);
     }
 
     public void setFoodCategory(FoodCategory foodCategory) {
