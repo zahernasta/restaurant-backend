@@ -17,7 +17,7 @@ public class Food {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "food_name")
@@ -36,9 +36,9 @@ public class Food {
     @NotNull
     private float foodPrice;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "food_category_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonIgnore
     @NotNull
     private FoodCategory foodCategory;
@@ -48,8 +48,8 @@ public class Food {
     )
     @JoinTable(
             name="menu",
-            joinColumns = @JoinColumn(name="restaurant_id"),
-            inverseJoinColumns = @JoinColumn(name="food_id")
+            joinColumns = @JoinColumn(name="food_id"),
+            inverseJoinColumns = @JoinColumn(name="restaurant_id")
 
     )
     @JsonIgnore

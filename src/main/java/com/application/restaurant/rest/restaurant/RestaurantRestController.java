@@ -1,13 +1,18 @@
 package com.application.restaurant.rest.restaurant;
 
+import com.application.restaurant.entity.Food;
+import com.application.restaurant.entity.FoodCategory;
 import com.application.restaurant.entity.Photo;
 import com.application.restaurant.entity.Restaurant;
 import com.application.restaurant.rest.exceptions.NotFoundException;
+import com.application.restaurant.service.foodCategoryServices.FoodCategoryService;
+import com.application.restaurant.service.foodServices.FoodService;
 import com.application.restaurant.service.photosServices.PhotoService;
 import com.application.restaurant.service.restaurantServices.RestaurantService;
 import com.application.restaurant.service.userServices.UserService;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +23,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api")
@@ -29,6 +33,12 @@ public class RestaurantRestController {
 
     @Autowired
     private PhotoService photoService;
+
+    @Autowired
+    private FoodService foodService;
+
+    @Autowired
+    private FoodCategoryService foodCategoryService;
 
 
     @GetMapping("/restaurants")
@@ -52,7 +62,6 @@ public class RestaurantRestController {
         return restaurant;
     }
 
-    //TODO: Check this later when working on the admin page c
     @PostMapping("/restaurants/{id}/photo")
     public Photo addRestaurantPhoto(@PathVariable long id, @RequestParam("imageFile") MultipartFile file) throws IOException {
 
@@ -63,6 +72,7 @@ public class RestaurantRestController {
         String absolutePath = currDir.getAbsolutePath();
         absolutePath = absolutePath.substring(0, absolutePath.length()-1);
 
+        //TODO: Put them in a static final variable
         String preFolder = "src/main/resources/static/";
         String folder = "photos/";
         byte[] imageBytes = file.getBytes();
@@ -74,7 +84,6 @@ public class RestaurantRestController {
         photo.setExtension(file.getContentType());
         photo.setPhotoLocation(folder + file.getOriginalFilename());
         photo.addRestaurant(restaurant);
-//        restaurant.addPhoto(photo);
         Files.write(path, imageBytes);
         photoService.savePhoto(photo);
         return photo;
@@ -100,6 +109,56 @@ public class RestaurantRestController {
         }
 
         throw new NotFoundException("Photo with the id " + photoId + " cannot be found");
+    }
+
+    @PostMapping("/restaurants/{id}/menu")
+    public Food insertFoodToMenu(@PathVariable("id") long id, @RequestParam("category") String category,
+                                 @RequestBody Food food) {
+        Restaurant restaurant = restaurantService.getRestaurant(id);
+        if(restaurant == null) {
+            throw new NotFoundException("Restaurant with this id has not been found");
+        }
+
+        FoodCategory foodCategory = foodCategoryService.getCategoryByName(category);
+        if(foodCategory == null) {
+            throw new NotFoundException("Category of this respective name has not been found");
+        }
+
+        foodCategory.addFood(food);
+        food.addRestaurant(restaurant);
+        foodService.saveFood(food);
+
+        return food;
+    }
+
+    @GetMapping("restaurants/{id}/menu/{foodId}")
+    public Food getFoodFromMenuById(@PathVariable("id") long id, @PathVariable("foodId") int foodId) {
+        Restaurant restaurant = restaurantService.getRestaurant(id);
+        for(Food food : restaurant.getFoodList()) {
+            if(food.getId() == foodId) {
+                return food;
+            }
+        }
+        throw new NotFoundException("Food with that id has not been found");
+    }
+
+    @GetMapping("restaurants/{id}/menu")
+    public Set<Food> getFoodFromMenu(@PathVariable("id") long id) {
+        Restaurant restaurant = restaurantService.getRestaurant(id);
+
+        return restaurant.getFoodList();
+    }
+
+    @DeleteMapping("restaurants/{id}/menu/{foodId}")
+    public ResponseEntity<String> deleteFoodFromMenu(@PathVariable("id") long id, @PathVariable("foodId") int foodId) {
+        Restaurant restaurant = restaurantService.getRestaurant(id);
+        for(Food food : restaurant.getFoodList()) {
+            if(food.getId() == foodId) {
+                foodService.deleteFood(foodId);
+                return new ResponseEntity<>("Food deleted successfully", HttpStatus.OK);
+            }
+        }
+        throw new NotFoundException("Food with that id has not been found");
     }
 
     @PutMapping("/restaurants")

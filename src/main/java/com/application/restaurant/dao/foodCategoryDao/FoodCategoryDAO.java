@@ -14,4 +14,6 @@ public interface FoodCategoryDAO {
 
     void saveFoodCategory(FoodCategory foodCategory);
 
+    void deleteFoodCategory(int id);
+
 }

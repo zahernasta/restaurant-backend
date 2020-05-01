@@ -12,4 +12,6 @@ public interface FoodCategoryService {
     FoodCategory getCategoryByName(String name);
 
     void saveFoodCategory(FoodCategory foodCategory);
+
+    void deleteFoodCategory(int id);
 }

@@ -84,8 +84,8 @@ public class Restaurant {
     )
     @JoinTable(
             name = "menu",
-            joinColumns = @JoinColumn(name = "food_id"),
-            inverseJoinColumns = @JoinColumn(name = "restaurant_id")
+            joinColumns = @JoinColumn(name = "restaurant_id"),
+            inverseJoinColumns = @JoinColumn(name = "food_id")
     )
     @JsonIgnore
     @LazyCollection(LazyCollectionOption.FALSE)

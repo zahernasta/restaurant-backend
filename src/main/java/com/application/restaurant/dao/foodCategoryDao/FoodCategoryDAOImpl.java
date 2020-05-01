@@ -60,4 +60,16 @@ public class FoodCategoryDAOImpl implements FoodCategoryDAO{
 
         currentSession.saveOrUpdate(foodCategory);
     }
+
+    @Override
+    public void deleteFoodCategory(int id) {
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        Query<FoodCategory> foodCategoryQuery
+                = currentSession.createQuery("delete from FoodCategory where id = :id");
+
+        foodCategoryQuery.setParameter("id", id);
+
+        foodCategoryQuery.executeUpdate();
+    }
 }

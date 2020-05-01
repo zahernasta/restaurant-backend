@@ -1,5 +1,7 @@
 package com.application.restaurant.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
@@ -10,7 +12,7 @@ import java.util.Set;
 public class FoodCategory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
@@ -18,7 +20,8 @@ public class FoodCategory {
     @NotNull
     private String name;
 
-    @OneToMany(mappedBy = "foodCategory")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "foodCategory")
+    @JsonIgnore
     private Set<Food> foodList;
 
     public int getId() {
@@ -51,5 +54,7 @@ public class FoodCategory {
         }
 
         this.foodList.add(food);
+
+        food.setFoodCategory(this);
     }
 }

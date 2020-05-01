@@ -32,4 +32,9 @@ public class FoodCategoryServiceImpl implements FoodCategoryService {
     public void saveFoodCategory(FoodCategory foodCategory) {
         foodCategoryDAO.saveFoodCategory(foodCategory);
     }
+
+    @Override
+    public void deleteFoodCategory(int id) {
+        foodCategoryDAO.deleteFoodCategory(id);
+    }
 }

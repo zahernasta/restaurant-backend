@@ -55,6 +55,13 @@ public class FoodDAOImpl implements FoodDAO {
     }
 
     @Override
+    public void updateFood(Food food) {
+        Session session = sessionFactory.getCurrentSession();
+
+        session.update(food);
+    }
+
+    @Override
     public void deleteFood(int id) {
         Session session = sessionFactory.getCurrentSession();
 

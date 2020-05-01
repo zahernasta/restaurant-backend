@@ -34,6 +34,11 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
+    public void updateFood(Food food) {
+        foodDAO.updateFood(food);
+    }
+
+    @Override
     public void deleteFood(int id) {
         foodDAO.deleteFood(id);
     }
