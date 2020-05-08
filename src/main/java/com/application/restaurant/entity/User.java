@@ -1,11 +1,8 @@
 package com.application.restaurant.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="users")
@@ -21,6 +18,10 @@ public class User {
 
 	@Column(name="email")
 	private String email;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+
+	private Set<Order> orderSet;
 
 	public User() {
 	}
@@ -47,6 +48,22 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Set<Order> getOrderSet() {
+		return orderSet;
+	}
+
+	public void setOrderSet(Set<Order> orderSet) {
+		this.orderSet = orderSet;
+	}
+
+	public void addOrder(Order order) {
+		if(this.orderSet == null) {
+			this.orderSet = new HashSet<>();
+		}
+
+		this.orderSet.add(order);
 	}
 }
 

@@ -39,7 +39,6 @@ public class Food {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "food_category_id", nullable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
-    @JsonIgnore
     @NotNull
     private FoodCategory foodCategory;
 
@@ -54,6 +53,10 @@ public class Food {
     )
     @JsonIgnore
     private Set<Restaurant> restaurantList;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "food")
+    @NotNull
+    private Set<FoodOrder> foodOrderSet;
 
     public int getId() {
         return id;
@@ -118,5 +121,21 @@ public class Food {
 
     public void setFoodCategory(FoodCategory foodCategory) {
         this.foodCategory = foodCategory;
+    }
+
+    public Set<FoodOrder> getFoodSet() {
+        return foodOrderSet;
+    }
+
+    public void setFoodSet(Set<FoodOrder> foodOrderSet) {
+        this.foodOrderSet = foodOrderSet;
+    }
+
+    public void addFoodOrder(FoodOrder foodOrder) {
+        if(this.foodOrderSet == null) {
+            this.foodOrderSet = new HashSet<>();
+        }
+
+        this.foodOrderSet.add(foodOrder);
     }
 }

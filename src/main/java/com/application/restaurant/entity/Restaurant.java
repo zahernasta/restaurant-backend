@@ -91,6 +91,9 @@ public class Restaurant {
     @LazyCollection(LazyCollectionOption.FALSE)
     private Set<Food> foodList;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurant")
+    private Set<Order> orderSet;
+
     public Restaurant() { }
 
     public long getId() {
@@ -208,6 +211,23 @@ public class Restaurant {
         }
 
         this.foodList.add(food);
+    }
+
+
+    public Set<Order> getOrderSet() {
+        return orderSet;
+    }
+
+    public void setOrderSet(Set<Order> orderSet) {
+        this.orderSet = orderSet;
+    }
+
+    public void addOrder(Order order) {
+        if(this.orderSet == null) {
+            this.orderSet = new HashSet<>();
+        }
+
+        this.orderSet.add(order);
     }
 
     public void setDescription(String description) {
