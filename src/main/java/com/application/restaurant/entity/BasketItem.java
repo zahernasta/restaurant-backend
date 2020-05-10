@@ -1,21 +1,19 @@
 package com.application.restaurant.entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "food_order")
-public class FoodOrder {
+@Table(name = "basket_items")
+public class BasketItem {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy =  GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     private int id;
-
-    @Column(name = "price")
-    @NotNull
-    private float price;
 
     @Column(name = "quantity")
     @NotNull
@@ -23,14 +21,15 @@ public class FoodOrder {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "food_id")
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @NotNull
     private Food food;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @NotNull
-    private Order order;
-
+    private User user;
 
     public int getId() {
         return id;
@@ -38,14 +37,6 @@ public class FoodOrder {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
     }
 
     public int getQuantity() {
@@ -64,11 +55,11 @@ public class FoodOrder {
         this.food = food;
     }
 
-    public Order getOrder() {
-        return order;
+    public User getUser() {
+        return user;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -1,6 +1,7 @@
 package com.application.restaurant.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -15,7 +16,7 @@ import java.util.Set;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
@@ -34,34 +35,38 @@ public class Order {
     @Column(name = "delivery_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "YYYY-MM-DD")
     @Temporal(TemporalType.DATE)
-    @NotNull
     private Date deliveryDate;
 
     @Column(name = "delivery_time")
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "HH:mm:ss")
     @Temporal(TemporalType.TIME)
-    @NotNull
     private Date deliveryTime;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "restaurant_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
-    @NotNull
-    private Restaurant restaurant;
 
     @Column(name = "order_status")
     @NotNull
     private boolean orderStatus;
 
+    @Column(name = "order_cancelled")
+    @NotNull
+    private boolean orderCancelled;
+
+    @Column(name = "amount")
+    @NotNull
+    private float amount;
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JsonIgnore
+    @NotNull
+    private Restaurant restaurant;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JsonIgnore
     @NotNull
     private User user;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
-    @NotNull
-    private Set<FoodOrder> foodOrderSet;
 
 
     public int getId() {
@@ -120,6 +125,22 @@ public class Order {
         this.orderStatus = orderStatus;
     }
 
+    public float getAmount() {
+        return amount;
+    }
+
+    public void setAmount(float amount) {
+        this.amount = amount;
+    }
+
+    public boolean isOrderCancelled() {
+        return orderCancelled;
+    }
+
+    public void setOrderCancelled(boolean orderCancelled) {
+        this.orderCancelled = orderCancelled;
+    }
+
     public User getUser() {
         return user;
     }
@@ -128,19 +149,4 @@ public class Order {
         this.user = user;
     }
 
-    public Set<FoodOrder> getFoodOrderSet() {
-        return foodOrderSet;
-    }
-
-    public void setFoodOrderSet(Set<FoodOrder> foodOrderSet) {
-        this.foodOrderSet = foodOrderSet;
-    }
-
-    public void addFoodOrder(FoodOrder foodOrder) {
-        if(this.foodOrderSet == null) {
-            this.foodOrderSet = new HashSet<>();
-        }
-
-        this.foodOrderSet.add(foodOrder);
-    }
 }

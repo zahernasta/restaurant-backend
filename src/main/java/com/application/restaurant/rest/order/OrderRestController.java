@@ -1,11 +1,15 @@
 package com.application.restaurant.rest.order;
 
-import com.application.restaurant.entity.Order;
+import com.application.restaurant.entity.*;
+import com.application.restaurant.rest.exceptions.NotFoundException;
+import com.application.restaurant.service.foodOrderService.FoodOrderService;
 import com.application.restaurant.service.foodServices.FoodService;
 import com.application.restaurant.service.orderServices.OrderService;
 import com.application.restaurant.service.restaurantServices.RestaurantService;
 import com.application.restaurant.service.userServices.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +30,9 @@ public class OrderRestController {
     @Autowired
     RestaurantService restaurantService;
 
+    @Autowired
+    FoodOrderService foodOrderService;
+
     @GetMapping("/orders/restaurant/{restaurant_id}")
     public List<Order> getAllOrdersByRestaurantId(@PathVariable("restaurant_id") int id) {
         return orderService.getAllOrdersByRestaurantId(id);
@@ -40,5 +47,5 @@ public class OrderRestController {
     public Order getOneOrderById(@PathVariable("order_id")int id) {
         return orderService.getOneOrderById(id);
     }
-
+    
 }
