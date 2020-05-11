@@ -70,18 +70,11 @@ public class BasketItemDAOImpl implements BasketItemDAO {
     }
 
     @Override
-    public void updateBasketItem(int id, int quantity) {
+    public void updateBasketItem(BasketItem basketItem) {
 
         Session currentSession = sessionFactory.getCurrentSession();
 
-        Query<BasketItem> basketItemQuery = currentSession.createQuery("update BasketItem set quantity = :quantity " +
-                "where id = :id ");
-
-        basketItemQuery.setParameter("quantity", quantity);
-        basketItemQuery.setParameter("id", id);
-
-        basketItemQuery.executeUpdate();
-
+        currentSession.update(basketItem);
     }
 
     @Override

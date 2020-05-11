@@ -2,7 +2,6 @@ package com.application.restaurant.rest.order;
 
 import com.application.restaurant.entity.*;
 import com.application.restaurant.rest.exceptions.NotFoundException;
-import com.application.restaurant.service.foodOrderService.FoodOrderService;
 import com.application.restaurant.service.foodServices.FoodService;
 import com.application.restaurant.service.orderServices.OrderService;
 import com.application.restaurant.service.restaurantServices.RestaurantService;
@@ -29,9 +28,6 @@ public class OrderRestController {
 
     @Autowired
     RestaurantService restaurantService;
-
-    @Autowired
-    FoodOrderService foodOrderService;
 
     @GetMapping("/orders/restaurant/{restaurant_id}")
     public List<Order> getAllOrdersByRestaurantId(@PathVariable("restaurant_id") int id) {

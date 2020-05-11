@@ -34,8 +34,8 @@ public class BasketItemServiceImpl implements BasketItemService {
     }
 
     @Override
-    public void updateBasketItem(int id, int quantity) {
-        basketItemDAO.updateBasketItem(id, quantity);
+    public void updateBasketItem(BasketItem basketItem) {
+        basketItemDAO.updateBasketItem(basketItem);
     }
 
     @Override

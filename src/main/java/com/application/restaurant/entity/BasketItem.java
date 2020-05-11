@@ -1,5 +1,6 @@
 package com.application.restaurant.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -22,14 +23,13 @@ public class BasketItem {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "food_id")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
-    @NotNull
     private Food food;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "basket_id")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
-    @NotNull
-    private User user;
+    @JsonIgnore
+    private Basket basket;
 
     public int getId() {
         return id;
@@ -55,11 +55,11 @@ public class BasketItem {
         this.food = food;
     }
 
-    public User getUser() {
-        return user;
+    public Basket getBasket() {
+        return basket;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setBasket(Basket basket) {
+        this.basket = basket;
     }
 }

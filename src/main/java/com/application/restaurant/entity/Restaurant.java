@@ -1,5 +1,6 @@
 package com.application.restaurant.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.LazyCollection;
@@ -91,7 +92,10 @@ public class Restaurant {
     @LazyCollection(LazyCollectionOption.FALSE)
     private Set<Food> foodList;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurant")
+    @OneToOne(mappedBy = "restaurant")
+    private Basket basket;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     private Set<Order> orderSet;
 
     public Restaurant() { }
@@ -234,4 +238,11 @@ public class Restaurant {
         this.description = description;
     }
 
+    public Basket getBasket() {
+        return basket;
+    }
+
+    public void setBasket(Basket basket) {
+        this.basket = basket;
+    }
 }

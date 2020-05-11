@@ -19,8 +19,10 @@ public class User {
 	@Column(name="email")
 	private String email;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+	@OneToMany(mappedBy = "user")
+	private Set<Basket> basket;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<Order> orderSet;
 
 	public User() {
@@ -50,6 +52,22 @@ public class User {
 		this.email = email;
 	}
 
+	public Set<Basket> getBasket() {
+		return basket;
+	}
+
+	public void setBasket(Set<Basket> basket) {
+		this.basket = basket;
+	}
+
+	public void addNewBasket(Basket newBasket) {
+		if(this.basket == null) {
+			this.basket = new HashSet<>();
+		}
+
+		this.basket.add(newBasket);
+	}
+
 	public Set<Order> getOrderSet() {
 		return orderSet;
 	}
@@ -58,7 +76,7 @@ public class User {
 		this.orderSet = orderSet;
 	}
 
-	public void addOrder(Order order) {
+	public void addNewOrder(Order order ) {
 		if(this.orderSet == null) {
 			this.orderSet = new HashSet<>();
 		}

@@ -14,7 +14,7 @@ public interface BasketItemDAO {
 
     void deleteBasketItemById(int id);
 
-    void updateBasketItem(int id, int quantity);
+    void updateBasketItem(BasketItem basketItem);
 
     void insertNewBasketItem(BasketItem basketItem);
 }

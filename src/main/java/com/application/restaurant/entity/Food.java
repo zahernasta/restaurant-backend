@@ -54,6 +54,10 @@ public class Food {
     @JsonIgnore
     private Set<Restaurant> restaurantList;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "food")
+    @JsonIgnore
+    private Set<BasketItem> basketItems;
+
     public int getId() {
         return id;
     }
@@ -119,4 +123,19 @@ public class Food {
         this.foodCategory = foodCategory;
     }
 
+    public Set<BasketItem> getBasketItems() {
+        return basketItems;
+    }
+
+    public void setBasketItems(Set<BasketItem> basketItems) {
+        this.basketItems = basketItems;
+    }
+
+    public void addBasketItem(BasketItem basketItem) {
+        if(this.basketItems == null) {
+            this.basketItems = new HashSet<>();
+        }
+
+        this.basketItems.add(basketItem);
+    }
 }
