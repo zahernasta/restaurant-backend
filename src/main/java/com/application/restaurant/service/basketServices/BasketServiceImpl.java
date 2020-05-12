@@ -17,6 +17,11 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
+    public Basket getBasketById(int id) {
+        return basketDAO.getBasketById(id);
+    }
+
+    @Override
     public void deleteBasket(int basketId) {
         basketDAO.deleteBasket(basketId);
     }

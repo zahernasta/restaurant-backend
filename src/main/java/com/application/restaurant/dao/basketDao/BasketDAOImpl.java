@@ -32,6 +32,20 @@ public class BasketDAOImpl implements BasketDAO {
     }
 
     @Override
+    public Basket getBasketById(int id) {
+
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        Query<Basket> basketQuery = currentSession.createQuery("from Basket where id = :id");
+
+        basketQuery.setParameter("id", id);
+
+        Basket basket = basketQuery.getSingleResult();
+
+        return basket;
+    }
+
+    @Override
     public void deleteBasket(int basketId) {
 
         Session currentSession = sessionFactory.getCurrentSession();

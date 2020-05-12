@@ -6,6 +6,8 @@ public interface BasketDAO {
 
     Basket getBasketByRestaurantIdAndUserId(int userId, long restaurantId);
 
+    Basket getBasketById(int id);
+
     void deleteBasket(int basketId);
 
     void updateBasket(Basket basket);

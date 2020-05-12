@@ -1,5 +1,7 @@
 package com.application.restaurant.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,9 +22,11 @@ public class User {
 	private String email;
 
 	@OneToMany(mappedBy = "user")
+	@JsonIgnore
 	private Set<Basket> basket;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+	@JsonIgnore
 	private Set<Order> orderSet;
 
 	public User() {

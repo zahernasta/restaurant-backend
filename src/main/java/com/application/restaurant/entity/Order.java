@@ -57,19 +57,25 @@ public class Order {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JsonIgnore
     @NotNull
     private Restaurant restaurant;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JsonIgnore
     @NotNull
     private User user;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "basket_id")
+    @JsonIgnore
     @NotNull
     private Basket basket;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
+    private Set<OrderItem> orderItemSet;
 
 
     public int getId() {
@@ -158,5 +164,21 @@ public class Order {
 
     public void setBasket(Basket basket) {
         this.basket = basket;
+    }
+
+    public Set<OrderItem> getOrderItemSet() {
+        return orderItemSet;
+    }
+
+    public void setOrderItemSet(Set<OrderItem> orderItemSet) {
+        this.orderItemSet = orderItemSet;
+    }
+
+    public void addOrderItem(OrderItem orderItem) {
+        if(this.orderItemSet == null) {
+            this.orderItemSet = new HashSet<>();
+        }
+
+        this.orderItemSet.add(orderItem);
     }
 }

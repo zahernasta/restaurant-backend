@@ -96,6 +96,7 @@ public class Restaurant {
     private Basket basket;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
+    @JsonIgnore
     private Set<Order> orderSet;
 
     public Restaurant() { }
