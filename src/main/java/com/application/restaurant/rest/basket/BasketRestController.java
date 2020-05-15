@@ -73,22 +73,55 @@ public class BasketRestController {
 
 
         Basket basket = basketService.getBasketByRestaurantIdAndUserId(userId, restaurantId);
+        Restaurant restaurant = restaurantService.getRestaurant(restaurantId);
         if(basket == null) {
-            throw new NotFoundException("Basket has not been found");
-        }
-
-        for(BasketItem bsItem : basket.getBasketItems()) {
-            if(basketItem.getFood().getId() == bsItem.getFood().getId()) {
-                BasketItem basketItem1 = basketItemService.getOneBasketItemById(bsItem.getId());
-                basketItem1.setQuantity(basketItem.getQuantity() + bsItem.getQuantity());
-                basketItemService.updateBasketItem(basketItem1);
-
-                return new ResponseEntity<>("Product updated successfully", HttpStatus.OK);
+            User user = userService.getUser(userId);
+            if(user == null) {
+                throw new NotFoundException("User has not been found");
             }
+
+            if(restaurant == null) {
+                throw new NotFoundException("Restaurant has not been found");
+            }
+
+            basket = new Basket();
+            basket.setUser(user);
+            basket.setRestaurant(restaurant);
+
+            basketService.addBasket(basket);
+        } else {
+
+            System.out.println(restaurant.getFoodList());
+            if(restaurant.getFoodList().isEmpty()) {
+                throw new NotFoundException("Food doesn't exist on the restaurant menu");
+            } else {
+                boolean found = false;
+                for(Food food : restaurant.getFoodList()) {
+                    if(basketItem.getFood().getId() == food.getId()) {
+                        found = true;
+                    }
+                }
+
+                if(found == false) {
+                    throw new NotFoundException("Food doesn't exist on the restaurant menu");
+                }
+            }
+
+            for(BasketItem bsItem : basket.getBasketItems()) {
+                if(basketItem.getFood().getId() == bsItem.getFood().getId()) {
+                    BasketItem basketItem1 = basketItemService.getOneBasketItemById(bsItem.getId());
+                    basketItem1.setQuantity(basketItem.getQuantity() + bsItem.getQuantity());
+                    basketItemService.updateBasketItem(basketItem1);
+
+                    return new ResponseEntity<>("Product updated successfully", HttpStatus.OK);
+                }
+            }
+
+            basketItem.setBasket(basket);
+            basketItemService.insertNewBasketItem(basketItem);
         }
 
-        basketItem.setBasket(basket);
-        basketItemService.insertNewBasketItem(basketItem);
+
 
         return new ResponseEntity<>("Product added successfully", HttpStatus.OK);
     }

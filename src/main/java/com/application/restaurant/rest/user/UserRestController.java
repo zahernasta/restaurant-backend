@@ -70,4 +70,16 @@ public class UserRestController {
 
         return user;
     }
+
+    @GetMapping("/users/name/{username}")
+    public User getUserByUsername(@PathVariable("username") String username) {
+
+        User user = userService.getUserByUsername(username);
+
+        if(user == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        return user;
+    }
 }

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Transactional
 @Repository
 public class BasketDAOImpl implements BasketDAO {
@@ -26,9 +28,14 @@ public class BasketDAOImpl implements BasketDAO {
         basketQuery.setParameter("userId", userId);
         basketQuery.setParameter("restaurantId", restaurantId);
 
-        Basket basket = basketQuery.getSingleResult();
+        List<Basket> basket = basketQuery.getResultList();
 
-        return basket;
+        if(basket.isEmpty()) {
+            return null;
+        }
+
+
+        return basket.get(0);
     }
 
     @Override
@@ -39,10 +46,9 @@ public class BasketDAOImpl implements BasketDAO {
         Query<Basket> basketQuery = currentSession.createQuery("from Basket where id = :id");
 
         basketQuery.setParameter("id", id);
+        List<Basket> basket = basketQuery.getResultList();
 
-        Basket basket = basketQuery.getSingleResult();
-
-        return basket;
+        return basket.get(0);
     }
 
     @Override
