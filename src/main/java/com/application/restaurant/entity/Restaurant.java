@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 
 import javax.persistence.*;
@@ -76,7 +78,6 @@ public class Restaurant {
             joinColumns=@JoinColumn(name="restaurant_id"),
             inverseJoinColumns=@JoinColumn(name="photo_id")
     )
-    @JsonIgnore
     @LazyCollection(LazyCollectionOption.FALSE)
     private Set<Photo> photoList;
 
@@ -92,12 +93,28 @@ public class Restaurant {
     @LazyCollection(LazyCollectionOption.FALSE)
     private Set<Food> foodList;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "favorite",
+            joinColumns = @JoinColumn(name = "restaurant_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<User> userSet;
+
     @OneToOne(mappedBy = "restaurant")
     private Basket basket;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @JsonIgnore
     private Set<Order> orderSet;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "cuisine_id")
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @NotNull
+    private CuisineCategory cuisineCategory;
 
     public Restaurant() { }
 
@@ -245,5 +262,28 @@ public class Restaurant {
 
     public void setBasket(Basket basket) {
         this.basket = basket;
+    }
+
+    public Set<User> getUserSet() {
+        return userSet;
+    }
+
+    public void setUserSet(Set<User> userSet) {
+        this.userSet = userSet;
+    }
+
+    public void addUser (User user) {
+        if(this.userSet == null) {
+            this.userSet = new HashSet<>();
+        }
+        this.userSet.add(user);
+    }
+
+    public CuisineCategory getCuisineCategory() {
+        return cuisineCategory;
+    }
+
+    public void setCuisineCategory(CuisineCategory cuisineCategory) {
+        this.cuisineCategory = cuisineCategory;
     }
 }

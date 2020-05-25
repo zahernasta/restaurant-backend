@@ -37,4 +37,9 @@ public class RestaurantServiceImpl implements RestaurantService {
     public void deleteRestaurant(long id) {
         restaurantDAO.deleteRestaurant(id);
     }
+
+    @Override
+    public List<Restaurant> getAllRestaurantByCuisineId(int cuisineId) {
+        return restaurantDAO.getAllRestaurantByCuisineId(cuisineId);
+    }
 }

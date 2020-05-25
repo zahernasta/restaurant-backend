@@ -17,4 +17,6 @@ public interface RestaurantService {
 
     public void deleteRestaurant(long id);
 
+    public List<Restaurant> getAllRestaurantByCuisineId(int cuisineId);
+
 }

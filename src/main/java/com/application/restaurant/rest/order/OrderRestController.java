@@ -56,13 +56,12 @@ public class OrderRestController {
         return orderService.getOneOrderById(id);
     }
 
-    @PostMapping("/orders/baskets/{basket_id}/users/{user_id}/restaurants/{restaurant_id}")
-    public Order insertNewOrder(@PathVariable("basket_id") int basketId,
-                                                 @PathVariable("user_id") int userId,
-                                                 @PathVariable("restaurant_id") int restaurantId,
-                                                 @RequestBody Order order) {
+    @PostMapping("/orders/users/{user_id}/restaurants/{restaurant_id}")
+    public ResponseEntity<String> insertNewOrder(@PathVariable("user_id") int userId,
+                                @PathVariable("restaurant_id") int restaurantId,
+                                @RequestBody Order order) {
 
-        Basket basket = basketService.getBasketById(basketId);
+        Basket basket = basketService.getBasketByRestaurantIdAndUserId(userId, restaurantId);
         User user = userService.getUser(userId);
         Restaurant restaurant = restaurantService.getRestaurant(restaurantId);
 
@@ -84,7 +83,7 @@ public class OrderRestController {
         }
 
 
-        return order;
+        return new ResponseEntity<>("Order added successfully", HttpStatus.OK);
     }
-    
+
 }

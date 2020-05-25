@@ -66,4 +66,15 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 
         query.executeUpdate();
     }
+
+    @Override
+    public List<Restaurant> getAllRestaurantByCuisineId(int cuisineId) {
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        Query<Restaurant> query = currentSession.createQuery("from Restaurant where cuisineCategory.id = :id");
+
+        query.setParameter("id", cuisineId);
+
+        return query.getResultList();
+    }
 }

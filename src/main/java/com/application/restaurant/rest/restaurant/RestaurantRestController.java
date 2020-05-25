@@ -1,10 +1,8 @@
 package com.application.restaurant.rest.restaurant;
 
-import com.application.restaurant.entity.Food;
-import com.application.restaurant.entity.FoodCategory;
-import com.application.restaurant.entity.Photo;
-import com.application.restaurant.entity.Restaurant;
+import com.application.restaurant.entity.*;
 import com.application.restaurant.rest.exceptions.NotFoundException;
+import com.application.restaurant.service.cuisineCategoryServices.CuisineCategoryService;
 import com.application.restaurant.service.foodCategoryServices.FoodCategoryService;
 import com.application.restaurant.service.foodServices.FoodService;
 import com.application.restaurant.service.photosServices.PhotoService;
@@ -41,6 +39,8 @@ public class RestaurantRestController {
     @Autowired
     private FoodCategoryService foodCategoryService;
 
+    @Autowired
+    private CuisineCategoryService cuisineCategoryService;
 
     @GetMapping("/restaurants")
     public List<Restaurant> getRestaurants() {
@@ -54,10 +54,17 @@ public class RestaurantRestController {
     }
 
     @PostMapping("/restaurants")
-    public Restaurant addRestaurant(@RequestBody Restaurant restaurant) {
+    public Restaurant addRestaurant(@RequestBody Restaurant restaurant,
+                                    @RequestParam(name = "category") String category) {
 
         restaurant.setId(0);
 
+        CuisineCategory cuisineCategory = cuisineCategoryService.getCuisineByName(category);
+        if(cuisineCategory == null) {
+            throw new NotFoundException("Category not found");
+        }
+
+        cuisineCategory.addRestaurant(restaurant);
         restaurantService.saveRestaurant(restaurant);
 
         return restaurant;
@@ -110,6 +117,19 @@ public class RestaurantRestController {
         }
 
         throw new NotFoundException("Photo with the id " + photoId + " cannot be found");
+    }
+
+    @GetMapping("/restaurants/categories")
+    public List<Restaurant> getAllRestaurantsByCategory(@RequestParam("category") String category) {
+
+        CuisineCategory cuisineCategory = cuisineCategoryService.getCuisineByName(category);
+        if(cuisineCategory == null) {
+            throw new NotFoundException("Category not found");
+        }
+
+        List<Restaurant> restaurants = restaurantService.getAllRestaurantByCuisineId(cuisineCategory.getId());
+
+        return restaurants;
     }
 
     @PostMapping("/restaurants/{id}/menu")
