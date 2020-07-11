@@ -71,7 +71,8 @@ public class RestaurantRestController {
     }
 
     @PostMapping("/restaurants/{id}/photo")
-    public Photo addRestaurantPhoto(@PathVariable long id, @RequestParam("imageFile") MultipartFile file) throws IOException {
+    public Photo addRestaurantPhoto(@PathVariable long id, @RequestParam("imageFile") MultipartFile file)
+            throws IOException {
 
 
         Photo photo = new Photo();

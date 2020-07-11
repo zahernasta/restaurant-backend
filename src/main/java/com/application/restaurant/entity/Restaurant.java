@@ -116,6 +116,10 @@ public class Restaurant {
     @NotNull
     private CuisineCategory cuisineCategory;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurant")
+    @JsonIgnore
+    private Set<Message> messageSet;
+
     public Restaurant() { }
 
     public long getId() {
@@ -285,5 +289,20 @@ public class Restaurant {
 
     public void setCuisineCategory(CuisineCategory cuisineCategory) {
         this.cuisineCategory = cuisineCategory;
+    }
+
+    public Set<Message> getMessageSet() {
+        return messageSet;
+    }
+
+    public void addMessage (Message message) {
+        if(this.messageSet == null) {
+            this.messageSet = new HashSet<>();
+        }
+        this.messageSet.add(message);
+    }
+
+    public void setMessageSet(Set<Message> messageSet) {
+        this.messageSet = messageSet;
     }
 }

@@ -5,6 +5,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,6 +40,11 @@ public class User {
 	)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private Set<Restaurant> restaurantSet;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+	@JsonIgnore
+	private Set<Message> messageSet;
+
 
 	public User() {
 	}
@@ -113,6 +119,21 @@ public class User {
 		}
 
 		this.restaurantSet.add(restaurant);
+	}
+
+	public Set<Message> getMessageSet() {
+		return messageSet;
+	}
+
+	public void addMessage (Message message) {
+		if(this.messageSet == null) {
+			this.messageSet = new HashSet<>();
+		}
+		this.messageSet.add(message);
+	}
+
+	public void setMessageSet(Set<Message> messageSet) {
+		this.messageSet = messageSet;
 	}
 }
 
