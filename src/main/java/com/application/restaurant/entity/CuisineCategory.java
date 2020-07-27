@@ -1,6 +1,8 @@
 package com.application.restaurant.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -21,6 +23,15 @@ public class CuisineCategory {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "cuisineCategory")
     @JsonIgnore
     private Set<Restaurant> restaurantSet;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "cuisine_categories_photos",
+            joinColumns = @JoinColumn(name =  "cuisine_categories_id"),
+            inverseJoinColumns = @JoinColumn(name = "photo_id")
+    )
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<Photo> photoSet;
 
     public int getId() {
         return id;
@@ -52,5 +63,16 @@ public class CuisineCategory {
         }
 
         this.restaurantSet.add(restaurant);
+    }
+
+    public Set<Photo> getPhotoSet() {
+        return photoSet;
+    }
+
+    public void addPhoto(Photo photo) {
+        if(this.photoSet == null) {
+            this.photoSet = new HashSet<>();
+        }
+        this.photoSet.add(photo);
     }
 }

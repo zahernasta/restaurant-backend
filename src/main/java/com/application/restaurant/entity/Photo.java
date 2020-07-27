@@ -45,6 +45,15 @@ public class Photo {
     @LazyCollection(LazyCollectionOption.FALSE)
     private Set<Restaurant> restaurantList;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "cuisine_categories_photos",
+            joinColumns = @JoinColumn(name =  "photo_id"),
+            inverseJoinColumns = @JoinColumn(name = "cuisine_categories_id")
+    )
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<CuisineCategory> cuisineCategorySet;
+
     public Photo() {
     }
 
@@ -95,5 +104,16 @@ public class Photo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<CuisineCategory> getCuisineCategorySet() {
+        return cuisineCategorySet;
+    }
+
+    public void addCuisineCategory(CuisineCategory cuisineCategory) {
+        if(this.cuisineCategorySet == null) {
+            this.cuisineCategorySet = new HashSet<>();
+        }
+        this.cuisineCategorySet.add(cuisineCategory);
     }
 }
