@@ -38,6 +38,7 @@ public class User {
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "restaurant_id")
 	)
+	@JsonIgnore
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private Set<Restaurant> restaurantSet;
 
@@ -45,6 +46,9 @@ public class User {
 	@JsonIgnore
 	private Set<Message> messageSet;
 
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+	@JsonIgnore
+	private Set<Reservation> reservationSet;
 
 	public User() {
 	}
@@ -134,6 +138,17 @@ public class User {
 
 	public void setMessageSet(Set<Message> messageSet) {
 		this.messageSet = messageSet;
+	}
+
+	public Set<Reservation> getReservationSet() {
+		return reservationSet;
+	}
+
+	public void addReservation (Reservation reservation) {
+		if(this.reservationSet == null) {
+			this.reservationSet = new HashSet<>();
+		}
+		this.reservationSet.add(reservation);
 	}
 }
 

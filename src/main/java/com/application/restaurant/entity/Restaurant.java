@@ -104,6 +104,7 @@ public class Restaurant {
     private Set<User> userSet;
 
     @OneToOne(mappedBy = "restaurant")
+    @JsonIgnore
     private Basket basket;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
@@ -119,6 +120,10 @@ public class Restaurant {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurant")
     @JsonIgnore
     private Set<Message> messageSet;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurant")
+    @JsonIgnore
+    private Set<Reservation> reservationSet;
 
     public Restaurant() { }
 
@@ -304,5 +309,16 @@ public class Restaurant {
 
     public void setMessageSet(Set<Message> messageSet) {
         this.messageSet = messageSet;
+    }
+
+    public Set<Reservation> getReservationSet() {
+        return reservationSet;
+    }
+
+    public void addReservation(Reservation reservation) {
+        if(this.reservationSet == null) {
+            this.reservationSet = new HashSet<>();
+        }
+        this.reservationSet.add(reservation);
     }
 }
